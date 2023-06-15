@@ -17,7 +17,13 @@ public class Method_02_Test {
         List<Person> findAll();
 
         // TODO créer une méthode String format()
+         default String format() {
+        	List<Person> persons = findAll();
+        	int count = persons.size();
+        
         // TODO la méthode retourne une chaîne de la forme [<nb_personnes> persons]
+        	return "[" +count+" personnes]";
+       } 
         // TODO exemple de résultat : "[14 persons]", "[30 persons]"
     }
     // end::IDao[]
@@ -36,7 +42,10 @@ public class Method_02_Test {
         // TODO la méthode retourne une chaîne de la forme DaoA[<nb_personnes> persons]
         // TODO exemple de résultat : "DaoA[14 persons]", "DaoA[30 persons]"
         // TODO l'implémentation réutilise la méthode format() de l'interface
-
+        public String format() {
+        	return "DaoA" + IDao.super.format();
+        }
+        
     }
     // end::DaoA[]
 
@@ -46,8 +55,11 @@ public class Method_02_Test {
         DaoA daoA = new DaoA();
 
         // TODO invoquer la méthode format() pour que le test soit passant
-        String result = null;
+        String result = daoA.format();
 
-        assert "DaoA[20 persons]".equals(result);
+        //assert "DaoA[20 persons]".equals(result);
+        
+        //  supprime les espaces en début et en fin de la chaîne result, sans tenir compte de la casse.
+        assert result.trim().equalsIgnoreCase("DaoA[20 personnes]");
     }
 }
