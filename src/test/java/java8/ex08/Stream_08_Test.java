@@ -69,10 +69,16 @@ public class Stream_08_Test {
 
         // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
         // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = null) {
+        try (Stream<String> lines = Files.lines(Paths.get("naissances_depuis_1900.csv"))) {
 
             // TODO construire une MAP (clé = année de naissance, valeur = somme des nombres de naissance de l'année)
-            Map<String, Integer> result = null;
+            Map<String, Integer> result = lines
+            		.skip(1) // saute la ligne d'entete
+            		.map(line -> line.split(","))
+            		.collect(groupingBy(
+            				columns -> columns[0],
+            				summingInt(columns -> Integer.parseInt(columns[2]))
+            		));
 
 
             assertThat(result.get("2015"), is(8097));
@@ -85,10 +91,14 @@ public class Stream_08_Test {
 
         // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
         // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = null) {
+        try (Stream<String> lines = Files.lines(Paths.get("naissances_depuis_1900.csv"))) {
 
             // TODO trouver l'année où il va eu le plus de nombre de naissance
-            Optional<Naissance> result = null;
+            Optional<Naissance> result = lines
+            		.skip(1) // saute la ligne d'entete
+            		.map(line -> line.split(","))
+            		.map(columns -> new Naissance(columns[0], columns[1], Integer.parseInt(columns[2])))
+            		.max((n1, n2) -> Integer.compare(n1.getNombre(), n2.getNombre()));
 
 
             assertThat(result.get().getNombre(), is(48));
@@ -101,11 +111,21 @@ public class Stream_08_Test {
     public void test_collectingAndThen() throws IOException {
         // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
         // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = null) {
+        try (Stream<String> lines = Files.lines(Paths.get("naissances_depuis_1900.csv"))) {
 
             // TODO construire une MAP (clé = année de naissance, valeur = maximum de nombre de naissances)
             // TODO utiliser la méthode "collectingAndThen" à la suite d'un "grouping"
-            Map<String, Naissance> result = null;
+            Map<String, Naissance> result = lines
+            		.skip(1) // saute la ligne d'entete
+            		.map(line -> line.split(","))
+            		.map(columns -> new Naissance(columns[0], columns[1], Integer.parseInt(columns[2])))
+            		.collect(groupingBy(
+            				Naissance::getAnnee,
+            				collectingAndThen(
+            						maxBy((n1, n2) -> Integer.compare(n1.getNombre(), n2.getNombre())),
+            						Optional::get
+            				)
+            		));
 
             assertThat(result.get("2015").getNombre(), is(38));
             assertThat(result.get("2015").getJour(), is("20150909"));
@@ -124,12 +144,13 @@ public class Stream_08_Test {
     @Test
     public void test_pizzaData() throws IOException {
         // TODO utiliser la méthode java.nio.file.Files.list pour parcourir un répertoire
-
-        // TODO trouver la pizza la moins chère
-        String pizzaNamePriceMin = null;
-
-        assertThat(pizzaNamePriceMin, is("L'indienne"));
-
+    	try (Stream<Path> files = Files.list(Paths.get(DATA_DIR))) {
+    		
+	        // TODO trouver la pizza la moins chère
+	        String pizzaNamePriceMin = null;
+	
+	        assertThat(pizzaNamePriceMin, is("L'indienne"));
+    	}
     }
 
     // TODO Optionel

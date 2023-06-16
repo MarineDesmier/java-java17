@@ -36,12 +36,30 @@ public class Stream_07_Test {
 
     // TODO créer une fonction List<Pizza> -> List<Pizza>
     // TODO seules les pizzas ayant un prix >= 1000 sont conservées
-    Function<List<Pizza>, List<Pizza>> filterPizza = null;
+    Function<List<Pizza>, List<Pizza>> filterPizza = pizzas -> {
+    	List<Pizza> filtrePizza = new ArrayList<>();
+		for(Pizza pizza : pizzas) {
+			if(pizza.getPrice() >= 1000) {
+				filtrePizza.add(pizza);
+			}
+		}
+    	return filtrePizza;	
+    };
 
     // TODO créer une fonction List<Pizza> -> List<Pizza>
     // TODO seules les pizzas ayant un prix >= 1000 sont conservées
     // TODO .parallel()
-    Function<List<Pizza>, List<Pizza>> parallelFilterPizza = null;
+    Function<List<Pizza>, List<Pizza>> parallelFilterPizza = pizzas -> {
+    	List<Pizza> filtreListPizza = new ArrayList<>();
+    	pizzas.parallelStream().forEach(pizza -> {
+    		if(pizza.getPrice() >= 1000) {
+    			synchronized  (filtreListPizza) {
+    				filtreListPizza.add(pizza);
+    			}
+			}
+    	});
+    	return filtreListPizza;	
+    };
 
     // TODO exécuter le test pour visualiser le temps d'exécution
     @Test
@@ -53,7 +71,7 @@ public class Stream_07_Test {
     // De mon côté :
     // INFO: arrayList=21 ms
     // INFO: linkedList=21 ms
-
+    // mon 1er test l'arrayList est plus rapide que linkeredList
 
     // TODO exécuter le test pour visualiser le temps d'exécution
     @Test
@@ -64,6 +82,7 @@ public class Stream_07_Test {
     // Que constatez-vous ?
     // INFO: arrayList=15 ms
     // INFO: linkedList=83 ms
+    // mon second test l'arrayList est moins rapide que linkeredList
 
     public void arraylist_vs_linkedlist(Function<List<Pizza>, List<Pizza>> fn) throws Exception {
 

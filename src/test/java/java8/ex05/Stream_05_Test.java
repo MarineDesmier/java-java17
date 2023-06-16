@@ -34,7 +34,9 @@ public class Stream_05_Test {
     // TODO utiliser la méthode Stream.iterate
     // TODO cette méthode doit produire le même résultat que imperativeSum
     private long iterateSum(long n) {
-        return 0;
+       return Stream.iterate(1L, i -> i+1)
+    		   .limit(n-1)
+    		   .reduce(0L, Long::sum);
     }
 
     // TODO exécuter le test pour vérifier que les méthodes imperativeSum et iterateSum produisent le même résultat
@@ -53,7 +55,10 @@ public class Stream_05_Test {
     // TODO utiliser la méthode Stream.iterate
     // TODO transformer en stream parallel (.parallel())
     private long parallelIterateSum(long n) {
-        return 0;
+        return Stream.iterate(1L, i -> i + 1)
+                .limit(n - 1)
+                .parallel()
+                .reduce(0L, Long::sum);
     }
 
     // TODO exécuter le test pour vérifier que les méthodes imperativeSum, iterateSum et parallelIterateSum produisent le même résultat
@@ -91,9 +96,14 @@ public class Stream_05_Test {
     // TODO visualiser les temps d'exécution
     @Test
     public void monitor_imperativeSum_vs_iterateSum_vs_parallelIterateSum() {
-        Logger.getAnonymousLogger().info("imperativeSum => " + /* TODO */" ms");
-        Logger.getAnonymousLogger().info("iterateSum => " + /* TODO */" ms");
-        Logger.getAnonymousLogger().info("parallelIterateSum => " + /* TODO */ " ms");
+    	
+    	long imperativeSumTime = monitor(this::imperativeSum, NB);
+        long iterateSumTime = monitor(this::iterateSum, NB);
+        long parallelIterateSumTime = monitor(this::parallelIterateSum, NB);
+    	
+        Logger.getAnonymousLogger().info("imperativeSum => " + imperativeSumTime + " ms");
+        Logger.getAnonymousLogger().info("iterateSum => " + iterateSumTime + " ms");
+        Logger.getAnonymousLogger().info("parallelIterateSum => " + parallelIterateSumTime + " ms");
     }
 
     // Quel résultat obtenez-vous ?
@@ -107,7 +117,8 @@ public class Stream_05_Test {
     // TODO compléter la méthode rangeSum
     // TODO utiliser la méthode LongStream.rangeClosed
     private long rangeSum(long n) {
-        return 0;
+        return LongStream.rangeClosed(1, n - 1)
+                .reduce(0L, Long::sum);
     }
 
     // TODO vérifier que l'implémentation de rangeSum
@@ -126,7 +137,9 @@ public class Stream_05_Test {
     // TODO utiliser la méthode LongStream.rangeClosed
     // TODO transformer en stream parallel (.parallel())
     private long rangeParallelSum(long n) {
-        return 0;
+        return LongStream.rangeClosed(1, n - 1)
+                .parallel()
+                .reduce(0L, Long::sum);
     }
 
     // TODO vérifier que l'implémentation de rangeParallelSum
@@ -145,11 +158,18 @@ public class Stream_05_Test {
 
     @Test
     public void monitor_imperativeSum_vs_iterateSum_vs_parallelIterateSum_vs_rangeSum_vs_rangeParallelSum() {
-        Logger.getAnonymousLogger().info("imperativeSum => " + /* TODO */ " ms");
-        Logger.getAnonymousLogger().info("iterateSum => " + /* TODO */ " ms");
-        Logger.getAnonymousLogger().info("parallelIterateSum => " + /* TODO */ " ms");
-        Logger.getAnonymousLogger().info("rangeSum => " + /* TODO */" ms");
-        Logger.getAnonymousLogger().info("rangeParallelSum => " /* TODO */ + " ms");
+        
+    	long imperativeSumTime = monitor(this::imperativeSum, NB);
+        long iterateSumTime = monitor(this::iterateSum, NB);
+        long parallelIterateSumTime = monitor(this::parallelIterateSum, NB);
+        long rangeSumTime = monitor(this::rangeSum, NB);
+        long rangeParallelSumTime = monitor(this::rangeParallelSum, NB);
+    	
+    	Logger.getAnonymousLogger().info("imperativeSum => " + imperativeSumTime + " ms");
+        Logger.getAnonymousLogger().info("iterateSum => " + iterateSumTime + " ms");
+        Logger.getAnonymousLogger().info("parallelIterateSum => " + parallelIterateSumTime + " ms");
+        Logger.getAnonymousLogger().info("rangeSum => " + rangeSumTime + " ms");
+        Logger.getAnonymousLogger().info("rangeParallelSum => " + rangeParallelSumTime + " ms");
     }
 
     // Quel résultat obtenez-vous ?

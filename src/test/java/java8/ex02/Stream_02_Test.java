@@ -40,7 +40,7 @@ public class Stream_02_Test {
 		// TODO Compter le nombre de clients associés aux commandes
 		long result = orders.stream()
 				.map(Order::getCustomer)
-				.distinct()
+				.distinct() // évite les doublons
 				.count();
 
 		assertThat(result, is(8L));
