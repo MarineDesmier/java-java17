@@ -36,6 +36,7 @@ public class Stream_07_Test {
 
     // TODO créer une fonction List<Pizza> -> List<Pizza>
     // TODO seules les pizzas ayant un prix >= 1000 sont conservées
+    // Function<List<Pizza>, List<Pizza>> filterPizza = (List<Pizza> pizzas) -> (pizzas.stream().filter(p->p.getPrice()>=1000).collect(Collectors.toList());
     Function<List<Pizza>, List<Pizza>> filterPizza = pizzas -> {
     	List<Pizza> filtrePizza = new ArrayList<>();
 		for(Pizza pizza : pizzas) {
@@ -49,6 +50,7 @@ public class Stream_07_Test {
     // TODO créer une fonction List<Pizza> -> List<Pizza>
     // TODO seules les pizzas ayant un prix >= 1000 sont conservées
     // TODO .parallel()
+    // Function<List<Pizza>, List<Pizza>> parallelFilterPizza = (List<Pizza> pizzas) -> (pizzas.stream().filter(p->p.getPrice()>=1000).parallel.collect(Collectors.toList());
     Function<List<Pizza>, List<Pizza>> parallelFilterPizza = pizzas -> {
     	List<Pizza> filtreListPizza = new ArrayList<>();
     	pizzas.parallelStream().forEach(pizza -> {

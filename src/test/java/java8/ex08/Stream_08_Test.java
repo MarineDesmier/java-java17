@@ -3,11 +3,15 @@ package java8.ex08;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -63,21 +67,25 @@ public class Stream_08_Test {
         }
     }
 
+    public static URI getResource(){
+        try {
+            return ClassLoader.getSystemResource(NAISSANCES_DEPUIS_1900_CSV).toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Fichier "+NAISSANCES_DEPUIS_1900_CSV+" non trouvé.");
+        }
+    }
 
     @Test
     public void test_group() throws IOException {
 
         // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
         // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = Files.lines(Paths.get("naissances_depuis_1900.csv"))) {
+    	try (Stream<String> lines = Files.lines(Paths.get(getResource()))) {
 
             // TODO construire une MAP (clé = année de naissance, valeur = somme des nombres de naissance de l'année)
-            Map<String, Integer> result = lines
-            		.skip(1) // saute la ligne d'entete
-            		.map(line -> line.split(","))
-            		.collect(groupingBy(
-            				columns -> columns[0],
-            				summingInt(columns -> Integer.parseInt(columns[2]))
+            Map<Object, List<String>> result = lines.skip(1) // saute la ligne d'entete
+            		.collect(Collectors.groupingBy(line -> line.split(";")[1],
+            				Collectors.toList()
             		));
 
 
@@ -91,7 +99,7 @@ public class Stream_08_Test {
 
         // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
         // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = Files.lines(Paths.get("naissances_depuis_1900.csv"))) {
+    	try (Stream<String> lines = Files.lines(Paths.get(getResource()))) {
 
             // TODO trouver l'année où il va eu le plus de nombre de naissance
             Optional<Naissance> result = lines
